@@ -2,6 +2,7 @@ package com.jornwer.basicauthapp.service;
 
 import com.jornwer.basicauthapp.dto.LoginDTO;
 import com.jornwer.basicauthapp.dto.UserDTO;
+import com.jornwer.basicauthapp.model.Status;
 import com.jornwer.basicauthapp.model.User;
 import com.jornwer.basicauthapp.repository.UserRepository;
 import lombok.AllArgsConstructor;
@@ -12,6 +13,9 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -37,11 +41,43 @@ public class UserService {
         } catch (AuthenticationException e){
             return false;
         }
-
     }
+
     private void loginUser(String email, String password) {
         Authentication authentication = authenticationManager
                 .authenticate(new UsernamePasswordAuthenticationToken(email, password));
         SecurityContextHolder.getContext().setAuthentication(authentication);
+    }
+
+    public List<User> getAllUsers(){
+        return userRepository.findAll();
+    }
+
+    public void blockUsers(List<Integer> list) {
+        for (Integer i : list) {
+            Optional<User> user = userRepository.findById(i.longValue());
+            if (user.isPresent()) {
+                User u = user.get();
+                u.setStatus(Status.BANNED);
+                userRepository.save(u);
+            }
+        }
+    }
+
+    public void unblockUsers(List<Integer> list) {
+        for (Integer i : list) {
+            Optional<User> user = userRepository.findById(i.longValue());
+            if (user.isPresent()) {
+                User u = user.get();
+                u.setStatus(Status.ACTIVE);
+                userRepository.save(u);
+            }
+        }
+    }
+
+    public void deleteUsers(List<Integer> list) {
+        for (Integer i : list) {
+            userRepository.deleteById(i.longValue());
+        }
     }
 }

@@ -3,12 +3,70 @@
 <head>
     <meta charset="UTF-8">
     <title>App</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
     <link href="https://getbootstrap.com/docs/4.0/examples/signin/signin.css" rel="stylesheet" crossorigin="anonymous">
 </head>
+<style>
+    body{
+        padding: 0;
+        margin: 0;
+    }
+    .header{
+        display: flex;
+        align-items: center;
+    }
+</style>
 <body>
-    <a href="/login">login</a>
-    <a href="/signup">signup</a>
-    <p sec:authorize="hasAuthority('EDIT')">qwe</p>
+    <div sec:authorize="!hasAuthority('EDIT')" class="m-3">
+        <button type="button" class="btn btn-primary">
+            <a href="/login" style="color: white">login</a>
+        </button>
+        <button type="button" class="btn btn-primary">
+            <a href="/signup" style="color: white">signup</a>
+        </button>
+    </div>
+    <div sec:authorize="hasAuthority('EDIT')" class="m-3">
+        <button type="button" class="btn btn-primary">
+            <a href="/logout" style="color: white">Logout</a>
+        </button>
+        <div class="container pt-5">
+            <table class="table table-striped">
+                <div class="header">
+                    <button id="block" type="button" class="btn btn-primary mr-5">Block</button>
+                    <span id="unblock" class="material-icons mr-5">lock_open</span>
+                    <i id="delete" class="material-icons">delete</i>
+                </div>
+                <thead>
+                    <tr>
+                        <th scope="col" class="m-0">
+                            <input id="checkall" type="checkbox" value="">
+                        </th>
+                        <th scope="col">Id</th>
+                        <th scope="col">Username</th>
+                        <th scope="col">Email</th>
+                        <th scope="col">Last login</th>
+                        <th scope="col">Register date</th>
+                        <th scope="col">Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                <tr th:each="user : ${users}">
+                    <td class="m-0">
+                        <input class="checkbox" type="checkbox" value="" id="flexCheckDefault">
+                    </td>
+                    <td><span th:text="${user.getId()}"></span></td>
+                    <td><span th:text="${user.getUsername()}"></span></td>
+                    <td><span th:text="${user.getEmail()}"></span></td>
+                    <td><span th:text="${user.getLastLogin()}"></span></td>
+                    <td><span th:text="${user.getRegisteredDate()}"></span></td>
+                    <td><span th:text="${user.getStatus()}"></span></td>
+
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <script type="text/javascript" th:src="@{/index.js}"></script>
 </body>
 </html>
