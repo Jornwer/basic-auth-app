@@ -18,4 +18,9 @@ public class MainPageController {
         model.addAttribute("users", userService.getAllUsers());
         return "index";
     }
+
+    @GetMapping("/error")
+    public String loadErrorPage() {
+        return "error";
+    }
 }
