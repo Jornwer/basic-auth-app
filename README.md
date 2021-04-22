@@ -1,2 +1,1 @@
-Deployed app:
-  https://jornwerauthapp.herokuapp.com/
+Basic security app using Spring Boot + jwt
